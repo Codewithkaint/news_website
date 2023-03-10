@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="scan.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>Scan</title>
+<style>*{
+    margin: 0;
+    padding: 0;
+}
+#box{
+    display: flex;
+            justify-content: center;
+            align-items: center;
+            align-items: center;
+            
+}
+    #video {
+          
+            height: 100vh;
+            
+        }
+</style>
+</head>
+<body>
+  
+
+        <div id="box">
+            <div class="containeer"></div>
+            <video class="containeer" id="video" playsinline></video>
+        </div>
+
+  
+
+<script>
+    //---------------------------------Camera Functionality-----------------------------
+    const video = document.getElementById("video");
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
+        video.srcObject = stream;
+        video.setAttribute("playsinline", true);
+        video.play();
+        requestAnimationFrame(tick);
+    });
+
+    function tick() {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            const canvasElement = document.createElement("canvas");
+            canvasElement.height = video.videoHeight;
+            canvasElement.width = video.videoWidth;
+            const canvas = canvasElement.getContext("2d");
+            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+            const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: "dontInvert",
+            });
+            if (code) {
+                console.log("QR code detected: ", code.data);
+                window.location.href = code.data;
+            }
+        }
+        requestAnimationFrame(tick);
+    }
+</script>
+
+
+<script src="/js/ui.js"></script>
+</body>
+</html>

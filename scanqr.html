@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" href="/img/icons/72.png" type="image/icon type">
+    <!-- materialize icons, css & js -->
+    <link type="text/css" href="/css/materialize.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="/js/materialize.min.js"></script>
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #box{
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+           
+        }
+     body{
+    background-color: rgb(11, 11, 12);
+  
+    }
+
+        .containeer video {
+            display: flex;
+            justify-content: center;
+            border: 2rem;
+            border-color:red ;
+        }
+
+        #video {
+            background: #f6c226;
+            align-items: center;
+            border: 2rem;
+            border-color:red ;
+            border-radius: 20%;
+            margin-top: 3rem;
+            
+        }
+       
+        
+h1{
+    margin-top: 4rem;
+    text-align: center;
+    font-size: 3rem;
+    color: white;
+}
+@media (min-width: 000px) and (max-width: 1199px) {
+#box{
+    display: flex;
+            justify-content: center;
+            align-items: center;
+}
+    #video {
+        margin-top: 8rem;
+            width: 70vw;
+            
+        }
+       
+  }     
+    </style>
+</head>
+
+<body>
+
+
+</div>
+<header>
+
+    <h1 >Scan QR Code</h1>
+    <div class="container">
+        <h1 class="form-title">Scan</h1>
+       
+    </div>
+
+</header>
+
+</body>
+<script>
+    //---------------------------------Camera Functionality-----------------------------
+    const video = document.getElementById("video");
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
+        video.srcObject = stream;
+        video.setAttribute("playsinline", true);
+        video.play();
+        requestAnimationFrame(tick);
+    });
+
+    function tick() {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            const canvasElement = document.createElement("canvas");
+            canvasElement.height = video.videoHeight;
+            canvasElement.width = video.videoWidth;
+            const canvas = canvasElement.getContext("2d");
+            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+            const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: "dontInvert",
+            });
+            if (code) {
+                console.log("QR code detected: ", code.data);
+                window.location.href = code.data;
+            }
+        }
+        requestAnimationFrame(tick);
+    }
+</script>
+
+
+<script src="/js/ui.js"></script>
+</html>

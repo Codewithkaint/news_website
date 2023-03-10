@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+
+    <title>Document</title>
+</head>
+<style>
+  *{
+    margin: 0;
+    padding: 0;
+  }
+  body{
+    background-image: url("https://wallpapercave.com/dwp1x/fto5lYX.jpg");
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #qrcodes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+  }
+</style>
+<body>
+    <div id="qrcodes"></div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>    
+ <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBOpTDqiqPmW6vEbndljiUcV7RvZImE0lo",
+  authDomain: "checkvalidity-7839e.firebaseapp.com",
+  databaseURL: "https://checkvalidity-7839e-default-rtdb.firebaseio.com",
+  projectId: "checkvalidity-7839e",
+  storageBucket: "checkvalidity-7839e.appspot.com",
+  messagingSenderId: "1031538482529",
+  appId: "1:1031538482529:web:e1f2f9e856a44bcac0b920",
+  
+};
+
+
+firebase.initializeApp(firebaseConfig)
+var newCode = firebase.database().ref("checkValidity");
+  
+
+
+localStorage.clear()
+const baseUrl = "https://codewithkaint.github.io/clock.github.io/";
+
+// The container element for the QR codes
+const container = document.getElementById("qrcodes");
+var i=1;
+setInterval(() => {
+    const qrCode = document.createElement("div");
+  let x= Math.floor(Math.random() * (36 - 2 + 1) ) + 2;
+  let y= Math.floor(Math.random() * (7 - 3 + 1) ) + 3;
+  const identifier = Math.random().toString(x).substring(y);
+  
+  const url = `${baseUrl}?id=${identifier}`;
+  
+  NewCode=newCode.push()
+
+    
+  NewCode.set({
+      key:url
+    });
+    
+
+  
+    new QRCode(qrCode, {
+    text: url,
+    width: 250,
+    height: 250,
+  });
+i=i+1
+  // Append the QR code element to the container
+  container.appendChild(qrCode);
+  setTimeout(() => {
+    container.innerHTML=""
+    newCode.remove()
+  }, 4500);
+}, 5000);
+
+
+
+
+ </script>
+</body>
+</html>
